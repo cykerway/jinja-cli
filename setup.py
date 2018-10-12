@@ -84,7 +84,7 @@ setup(
 
     # This should be a valid email address corresponding to the author listed
     # above.
-    author_email='cykerway at gmail dot com',  # Optional
+#    author_email='',  # Optional
 
     # Classifiers help users find your project by categorizing it.
     #
