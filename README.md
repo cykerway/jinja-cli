@@ -30,9 +30,27 @@ supported data formats: ini, json, xml, yaml;
 
 ### usage example
 
+template file `example.j2`:
+
+    sheep eat {{ sheep.eat }};
+
+data file `example.json`:
+
+    {
+        "sheep": {
+            "eat": "grass"
+        }
+    }
+
+any of these commands:
+
     # jinja -d example.json example.j2
     # jinja -d example.json < example.j2
     # jinja -d - -f json example.j2 < example.json
+
+output:
+
+    sheep eat grass;
 
 [jinja]: http://jinja.pocoo.org/
 
