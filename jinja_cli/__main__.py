@@ -169,7 +169,6 @@ def parse_args():
     ##  init arg parser;
     parser = argparse.ArgumentParser(
         prog=prog,
-        usage='{} [options] [template]'.format(prog),
         description='a command line interface to jinja;',
         formatter_class=argparse_better.HelpFormatter,
         add_help=False,
@@ -188,7 +187,7 @@ def parse_args():
         action='append',
         nargs=2,
         type=str,
-        metavar=('{key}', '{value}'),
+        metavar=('key', 'value'),
         help='define data;',
     )
 
@@ -196,7 +195,7 @@ def parse_args():
     parser.add_argument(
         '-d', '--data',
         type=str,
-        metavar='{file}',
+        metavar='file',
         help='data file;',
     )
 
@@ -204,7 +203,7 @@ def parse_args():
     parser.add_argument(
         '-f', '--format',
         type=str,
-        metavar='{format}',
+        metavar='format',
         help='data format;',
     )
 
@@ -212,7 +211,7 @@ def parse_args():
     parser.add_argument(
         '-o', '--output',
         type=str,
-        metavar='{file}',
+        metavar='file',
         help='output file;',
     )
 
@@ -221,7 +220,7 @@ def parse_args():
         'template',
         nargs='?',
         type=str,
-        metavar='[template]',
+        metavar='template',
         help='template file;',
     )
 
