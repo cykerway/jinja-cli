@@ -11,6 +11,7 @@ from jinja2 import Template
 from os.path import basename
 from os.path import dirname
 import argparse
+import argparse_better
 import configparser
 import json
 import os
@@ -20,42 +21,6 @@ import yaml
 
 ##  program name;
 prog = 'jinja'
-
-class help_formatter(argparse.HelpFormatter):
-
-    '''
-    formatter for generating usage messages and argument help strings;
-
-    difference from super class:
-
-    -   default indent increment is 4 (io: 2);
-
-    -   default max help position is 48 (io: 24);
-
-    -   short and long options are formatted together;
-    '''
-
-    def __init__(self, prog, indent_increment=4, max_help_position=48,
-                 width=None):
-        return super().__init__(
-            prog=prog,
-            indent_increment=indent_increment,
-            max_help_position=max_help_position,
-            width=width,
-        )
-
-    def _format_action_invocation(self, action):
-        if not action.option_strings:
-            default = self._get_default_metavar_for_positional(action)
-            metavar, = self._metavar_formatter(action, default)(1)
-            return metavar
-        else:
-            if action.nargs == 0:
-                return '|'.join(action.option_strings)
-            else:
-                default = self._get_default_metavar_for_optional(action)
-                args_string = self._format_args(action, default)
-                return '|'.join(action.option_strings) + ' ' + args_string
 
 def load_data_ini(fin):
 
@@ -206,7 +171,7 @@ def parse_args():
         prog=prog,
         usage='{} [options] [template]'.format(prog),
         description='a command line interface to jinja;',
-        formatter_class=help_formatter,
+        formatter_class=argparse_better.HelpFormatter,
         add_help=False,
     )
 
