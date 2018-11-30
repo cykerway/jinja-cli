@@ -14,21 +14,27 @@ supported data formats: ini, json, xml, yaml;
 
 ## usage
 
-    usage: jinja [options] [template]
+to render a jinja template with data in json format:
 
-    a command line interface to jinja;
+    # jinja -d {data} {template}
 
-    positional arguments:
-        [template]                 template file;
+to use a different data format:
 
-    optional arguments:
-        -h|--help                  display help message;
-        -D|--define {key} {value}  define data;
-        -d|--data {file}           data file;
-        -f|--format {format}       data format;
-        -o|--output {file}         output file;
+    # jinja -d {data} -f {data_format} {template}
 
-### usage example
+to read template from stdin:
+
+    # jinja -d {data} < {template}
+
+to read data from stdin:
+
+    # jinja -d - {template} < {data}
+
+to output to a file:
+
+    # jinja -d {data} -o {output} {template}
+
+## example
 
 template file `example.j2`:
 
