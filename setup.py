@@ -180,7 +180,7 @@ setup(
     install_requires=[
         'Jinja2',
         'PyYAML',
-        'argparse-better',
+        'argparse-ext',
         'xmltodict',
     ],
 

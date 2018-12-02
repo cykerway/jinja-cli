@@ -11,7 +11,7 @@ from jinja2 import Template
 from os.path import basename
 from os.path import dirname
 import argparse
-import argparse_better
+import argparse_ext
 import configparser
 import json
 import os
@@ -170,7 +170,7 @@ def parse_args():
     parser = argparse.ArgumentParser(
         prog=prog,
         description='a command line interface to jinja;',
-        formatter_class=argparse_better.HelpFormatter,
+        formatter_class=argparse_ext.HelpFormatter,
         add_help=False,
     )
 
