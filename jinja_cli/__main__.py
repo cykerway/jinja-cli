@@ -94,7 +94,7 @@ def load_data_yaml(fin):
     :   data;
     '''
 
-    return yaml.load(fin)
+    return yaml.safe_load(fin)
 
 def load_data(fname, fmt, defines):
 
