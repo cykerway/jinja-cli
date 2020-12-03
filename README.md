@@ -30,6 +30,10 @@ to read data from stdin:
 
     # jinja -d - {template} < {data}
 
+to use environment variables as data:
+
+    # jinja --defines-from-env='^AWS_' < {template}
+
 to output to a file:
 
     # jinja -d {data} -o {output} {template}

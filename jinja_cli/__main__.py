@@ -15,6 +15,7 @@ import argparse_ext
 import configparser
 import json
 import os
+import re
 import sys
 import xmltodict
 import yaml
@@ -189,6 +190,15 @@ def parse_args():
         type=str,
         metavar=('key', 'value'),
         help='define data;',
+        default={},
+    )
+
+    parser.add_argument(
+        '--defines-from-env',
+        nargs='?',
+        action='store',
+        const='.*',
+        help='Add env vars matching regex to data'
     )
 
     ##  add arg;
@@ -253,7 +263,13 @@ def main():
         template = env.get_template(basename(args.template))
 
     ##  load data;
-    data = load_data(args.data, args.format, args.define)
+    defines = {}
+    if args.defines_from_env:
+        for k, v in os.environ.items():
+            if re.match(args.defines_from_env, k):
+                defines[k] = v
+    defines.update(args.define)
+    data = load_data(args.data, args.format, defines)
 
     ##  render template with data;
     rendered = template.render(data)
