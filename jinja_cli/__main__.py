@@ -8,6 +8,7 @@ from jinja2 import DictLoader
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 from jinja2 import Template
+from jinja2 import StrictUndefined, Undefined
 from os.path import basename
 from os.path import dirname
 import argparse
@@ -217,6 +218,16 @@ def parse_args():
 
     ##  add arg;
     parser.add_argument(
+        '--strict-undefined',
+        action='store_const',
+        const=StrictUndefined,
+        dest='undefined_type',
+        default=Undefined,
+        help='Fail on undefined variables',
+    )
+
+    ##  add arg;
+    parser.add_argument(
         'template',
         nargs='?',
         type=str,
@@ -243,12 +254,14 @@ def main():
         env = Environment(
             loader=DictLoader({ '-': sys.stdin.read() }),
             keep_trailing_newline=True,
+            undefined=args.undefined_type,
         )
         template = env.get_template('-')
     else:
         env = Environment(
             loader=FileSystemLoader(dirname(args.template)),
             keep_trailing_newline=True,
+            undefined=args.undefined_type,
         )
         template = env.get_template(basename(args.template))
 
