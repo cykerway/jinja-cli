@@ -28,7 +28,7 @@ import yaml
 ##  program name;
 prog = 'jinja'
 
-def load_data_ini(fin):
+def _load_data_ini(fin):
 
     '''
     load data in ini format;
@@ -43,7 +43,7 @@ def load_data_ini(fin):
     cp.read_file(fin)
     return { s: dict(cp.defaults(), **cp[s]) for s in cp.sections() }
 
-def load_data_json(fin):
+def _load_data_json(fin):
 
     '''
     load data in json format;
@@ -56,7 +56,7 @@ def load_data_json(fin):
 
     return json.load(fin)
 
-def load_data_xml(fin):
+def _load_data_xml(fin):
 
     '''
     load data in xml format;
@@ -69,7 +69,7 @@ def load_data_xml(fin):
 
     return xmltodict.parse(fin.read())
 
-def load_data_yaml(fin):
+def _load_data_yaml(fin):
 
     '''
     load data in yaml format;
@@ -82,7 +82,7 @@ def load_data_yaml(fin):
 
     return yaml.safe_load(fin)
 
-def load_env_data(envs, env_regex):
+def _load_env_data(envs, env_regex):
 
     '''
     load data from env;
@@ -103,7 +103,7 @@ def load_env_data(envs, env_regex):
 
     return data
 
-def load_file_data(fname, fmt):
+def _load_file_data(fname, fmt):
 
     '''
     load data from file;
@@ -141,13 +141,13 @@ def load_file_data(fname, fmt):
 
             ##  load data;
             if fmt == 'ini':
-                data = load_data_ini(fin)
+                data = _load_data_ini(fin)
             elif fmt == 'json':
-                data = load_data_json(fin)
+                data = _load_data_json(fin)
             elif fmt == 'xml':
-                data = load_data_xml(fin)
+                data = _load_data_xml(fin)
             elif fmt == 'yaml':
-                data = load_data_yaml(fin)
+                data = _load_data_yaml(fin)
             else:
                 raise Exception('invalid data format: {};'.format(fmt))
 
@@ -156,7 +156,7 @@ def load_file_data(fname, fmt):
 
     return data
 
-def load_data(fname, fmt, defines, envs, env_regex):
+def _load_data(fname, fmt, defines, envs, env_regex):
 
     '''
     load data; precedence (low to high): envars, files, args;
@@ -178,10 +178,10 @@ def load_data(fname, fmt, defines, envs, env_regex):
     data = {}
 
     ##  merge data defined as envars;
-    data.update(load_env_data(envs, env_regex))
+    data.update(_load_env_data(envs, env_regex))
 
     ##  merge data defined in file;
-    data.update(load_file_data(fname, fmt))
+    data.update(_load_file_data(fname, fmt))
 
     ##  merge data defined as cmd args;
     if defines:
@@ -189,7 +189,7 @@ def load_data(fname, fmt, defines, envs, env_regex):
 
     return data
 
-def undefined_type(name):
+def _undefined_type(name):
 
     '''
     get undefined type from its name;
@@ -210,7 +210,7 @@ def undefined_type(name):
     except KeyError:
         raise Exception('unknown undefined type: {}'.format(name))
 
-def parse_args():
+def _parse_args():
 
     '''
     parse command line arguments;
@@ -313,26 +313,26 @@ def main():
     '''
 
     ##  parse args;
-    args = parse_args()
+    args = _parse_args()
 
     ##  load template;
     if args.template is None or args.template == '-':
         env = Environment(
             loader=DictLoader({ '-': sys.stdin.read() }),
             keep_trailing_newline=True,
-            undefined=undefined_type(args.undefined),
+            undefined=_undefined_type(args.undefined),
         )
         template = env.get_template('-')
     else:
         env = Environment(
             loader=FileSystemLoader(dirname(args.template)),
             keep_trailing_newline=True,
-            undefined=undefined_type(args.undefined),
+            undefined=_undefined_type(args.undefined),
         )
         template = env.get_template(basename(args.template))
 
     ##  load data;
-    data = load_data(
+    data = _load_data(
         args.data, args.format, args.define, args.env, args.env_regex,
     )
 
