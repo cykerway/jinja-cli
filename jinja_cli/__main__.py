@@ -28,7 +28,7 @@ import yaml
 ##  program name;
 prog = 'jinja'
 
-def _load_data_ini(fin):
+def _load_file_data_ini(fin):
 
     '''
     load data in ini format;
@@ -43,7 +43,7 @@ def _load_data_ini(fin):
     cp.read_file(fin)
     return { s: dict(cp.defaults(), **cp[s]) for s in cp.sections() }
 
-def _load_data_json(fin):
+def _load_file_data_json(fin):
 
     '''
     load data in json format;
@@ -56,7 +56,7 @@ def _load_data_json(fin):
 
     return json.load(fin)
 
-def _load_data_xml(fin):
+def _load_file_data_xml(fin):
 
     '''
     load data in xml format;
@@ -69,7 +69,7 @@ def _load_data_xml(fin):
 
     return xmltodict.parse(fin.read())
 
-def _load_data_yaml(fin):
+def _load_file_data_yaml(fin):
 
     '''
     load data in yaml format;
@@ -88,9 +88,9 @@ def _load_env_data(envs, env_regex):
     load data from env;
 
     $1:envs:list
-    :   a list of envars that define data;
+    :   names of envars that define data;
     $2:env_regex:str
-    :   a regex matching envars that define data;
+    :   regex matching envars that define data;
     $?::dict
     :   data;
     '''
@@ -111,7 +111,7 @@ def _load_file_data(fname, fmt):
     $1:fname:str
     :   data file name;
     $2:fmt:str
-    :   data format;
+    :   data file format;
     $?::dict
     :   data;
     '''
@@ -141,13 +141,13 @@ def _load_file_data(fname, fmt):
 
             ##  load data;
             if fmt == 'ini':
-                data = _load_data_ini(fin)
+                data = _load_file_data_ini(fin)
             elif fmt == 'json':
-                data = _load_data_json(fin)
+                data = _load_file_data_json(fin)
             elif fmt == 'xml':
-                data = _load_data_xml(fin)
+                data = _load_file_data_xml(fin)
             elif fmt == 'yaml':
-                data = _load_data_yaml(fin)
+                data = _load_file_data_yaml(fin)
             else:
                 raise Exception('invalid data format: {};'.format(fmt))
 
@@ -164,13 +164,13 @@ def _load_data(fname, fmt, defines, envs, env_regex):
     $1:fname:str
     :   data file name;
     $2:fmt:str
-    :   data format;
+    :   data file format;
     $3:defines:list
     :   data defined as command line arguments;
     $4:envs:list
-    :   a list of envars that define data;
+    :   names of envars that define data;
     $5:env_regex:str
-    :   a regex matching envars that define data;
+    :   regex matching envars that define data;
     $?::dict
     :   data;
     '''
