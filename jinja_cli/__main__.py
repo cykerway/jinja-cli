@@ -4,13 +4,17 @@
 main module;
 '''
 
+from jinja2 import ChainableUndefined
+from jinja2 import DebugUndefined
 from jinja2 import DictLoader
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
+from jinja2 import StrictUndefined
 from jinja2 import Template
-from jinja2 import StrictUndefined, Undefined
+from jinja2 import Undefined
 from os.path import basename
 from os.path import dirname
+
 import argparse
 import argparse_ext
 import configparser
@@ -28,14 +32,9 @@ def load_data_ini(fin):
     '''
     load data in ini format;
 
-    ##  params
-
-    fin:file object
+    $1:fin:file object
     :   data file object;
-
-    ##  return
-
-    :dict
+    $?::dict
     :   data;
     '''
 
@@ -48,14 +47,9 @@ def load_data_json(fin):
     '''
     load data in json format;
 
-    ##  params
-
-    fin:file object
+    $1:fin:file object
     :   data file object;
-
-    ##  return
-
-    :dict
+    $?::dict
     :   data;
     '''
 
@@ -66,14 +60,9 @@ def load_data_xml(fin):
     '''
     load data in xml format;
 
-    ##  params
-
-    fin:file object
+    $1:fin:file object
     :   data file object;
-
-    ##  return
-
-    :dict
+    $?::dict
     :   data;
     '''
 
@@ -84,14 +73,9 @@ def load_data_yaml(fin):
     '''
     load data in yaml format;
 
-    ##  params
-
-    fin:file object
+    $1:fin:file object
     :   data file object;
-
-    ##  return
-
-    :dict
+    $?::dict
     :   data;
     '''
 
@@ -102,18 +86,13 @@ def load_data(fname, fmt, defines):
     '''
     load data;
 
-    ##  params
-
-    fname:str
+    $1:fname:str
     :   data file name;
-    fmt:str
+    $2:fmt:str
     :   data format;
-    defines:list
+    $3:defines:list
     :   data defined as command line arguments;
-
-    ##  return
-
-    :dict
+    $?::dict
     :   data;
     '''
 
@@ -160,6 +139,27 @@ def load_data(fname, fmt, defines):
         data.update(defines)
 
     return data
+
+def undefined_type(name):
+
+    '''
+    get undefined type from its name;
+
+    $1:name:str
+    :   undefined type name: '', 'chainable', 'debug', 'strict';
+    $?::type
+    :   undefined type;
+    '''
+
+    try:
+        return {
+            '':             Undefined,
+            'chainable':    ChainableUndefined,
+            'debug':        DebugUndefined,
+            'strict':       StrictUndefined,
+        }[name]
+    except KeyError:
+        raise Exception('unknown undefined type: {}'.format(name))
 
 def parse_args():
 
@@ -218,12 +218,12 @@ def parse_args():
 
     ##  add arg;
     parser.add_argument(
-        '--strict-undefined',
-        action='store_const',
-        const=StrictUndefined,
-        dest='undefined_type',
-        default=Undefined,
-        help='Fail on undefined variables',
+        '-u', '--undefined',
+        type=str,
+        metavar='type',
+        help='undefined type;',
+        choices=['', 'chainable', 'debug', 'strict'],
+        default='',
     )
 
     ##  add arg;
@@ -254,14 +254,14 @@ def main():
         env = Environment(
             loader=DictLoader({ '-': sys.stdin.read() }),
             keep_trailing_newline=True,
-            undefined=args.undefined_type,
+            undefined=undefined_type(args.undefined),
         )
         template = env.get_template('-')
     else:
         env = Environment(
             loader=FileSystemLoader(dirname(args.template)),
             keep_trailing_newline=True,
-            undefined=args.undefined_type,
+            undefined=undefined_type(args.undefined),
         )
         template = env.get_template(basename(args.template))
 
