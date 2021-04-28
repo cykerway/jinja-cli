@@ -82,17 +82,36 @@ def load_data_yaml(fin):
 
     return yaml.safe_load(fin)
 
-def load_data(fname, fmt, defines):
+def load_env_data(envs, env_regex):
 
     '''
-    load data;
+    load data from env;
+
+    $1:envs:list
+    :   a list of envars that define data;
+    $2:env_regex:str
+    :   a regex matching envars that define data;
+    $?::dict
+    :   data;
+    '''
+
+    data = {}
+
+    for k in os.environ:
+        if ( envs and k in envs) or ( env_regex and re.match(env_regex, k) ):
+            data[k] = os.environ[k]
+
+    return data
+
+def load_file_data(fname, fmt):
+
+    '''
+    load data from file;
 
     $1:fname:str
     :   data file name;
     $2:fmt:str
     :   data format;
-    $3:defines:list
-    :   data defined as command line arguments;
     $?::dict
     :   data;
     '''
@@ -135,8 +154,37 @@ def load_data(fname, fmt, defines):
         finally:
             fin.close()
 
-    ##  merge in command line data;
-    if defines is not None:
+    return data
+
+def load_data(fname, fmt, defines, envs, env_regex):
+
+    '''
+    load data; precedence (low to high): envars, files, args;
+
+    $1:fname:str
+    :   data file name;
+    $2:fmt:str
+    :   data format;
+    $3:defines:list
+    :   data defined as command line arguments;
+    $4:envs:list
+    :   a list of envars that define data;
+    $5:env_regex:str
+    :   a regex matching envars that define data;
+    $?::dict
+    :   data;
+    '''
+
+    data = {}
+
+    ##  merge data defined as envars;
+    data.update(load_env_data(envs, env_regex))
+
+    ##  merge data defined in file;
+    data.update(load_file_data(fname, fmt))
+
+    ##  merge data defined as cmd args;
+    if defines:
         data.update(defines)
 
     return data
@@ -190,16 +238,24 @@ def parse_args():
         nargs=2,
         type=str,
         metavar=('key', 'value'),
-        help='define data;',
-        default={},
+        help='define data with key-value pairs;',
     )
 
+    ##  add arg;
     parser.add_argument(
-        '--defines-from-env',
-        nargs='?',
-        action='store',
-        const='.*',
-        help='Add env vars matching regex to data'
+        '-E', '--env',
+        action='append',
+        type=str,
+        metavar='key',
+        help='define data with envars;',
+    )
+
+    ##  add arg;
+    parser.add_argument(
+        '-X', '--env-regex',
+        type=str,
+        metavar='regex',
+        help='define data with envars matching regex;',
     )
 
     ##  add arg;
@@ -276,13 +332,9 @@ def main():
         template = env.get_template(basename(args.template))
 
     ##  load data;
-    defines = {}
-    if args.defines_from_env:
-        for k, v in os.environ.items():
-            if re.match(args.defines_from_env, k):
-                defines[k] = v
-    defines.update(args.define)
-    data = load_data(args.data, args.format, defines)
+    data = load_data(
+        args.data, args.format, args.define, args.env, args.env_regex,
+    )
 
     ##  render template with data;
     rendered = template.render(data)
