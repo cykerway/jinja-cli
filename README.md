@@ -30,9 +30,17 @@ to read data from stdin:
 
     # jinja -d - {template} < {data}
 
-to use environment variables as data:
+to read data from command line arguments:
 
-    # jinja --defines-from-env='^AWS_' < {template}
+    # jinja -D {key} {value} [ -D {key} {value} ... ] {template}
+
+to read data from environment variables:
+
+    # jinja -E {key} [ -E {key} ... ] {template}
+
+to read data from environment variables using regex:
+
+    # jinja -X {regex} {template}
 
 to output to a file:
 
