@@ -64,16 +64,25 @@ def read_bytes(fname):
     with open(fname, 'rb') as fin:
         return fin.read()
 
-def run_proc(args):
+def run_proc(args, capture_output=True, check=True, env=None, input=None):
 
     '''
     run a process and capture its output;
 
     $1:args:list
     :   args;
+    $2:capture_output:bool
+    :   capture output;
+    $3:check:bool
+    :   check;
+    $4:env:dict
+    :   env;
+    $5:input:bytes
+    :   input;
     $?::CompletedProcess
     :   completed process;
     '''
 
-    return subprocess.run(args, capture_output=True, check=True)
+    return subprocess.run(
+        args, capture_output=capture_output, check=check, env=env, input=input)
 
