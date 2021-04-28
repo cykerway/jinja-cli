@@ -2,9 +2,9 @@
 
 a command line interface to [jinja][jinja];
 
-this program renders a jinja template with given data; data may be read from a
-file, or defined as command line arguments; either template or data file may be
-stdin; output file may be stdout;
+this program renders a jinja template using input data; data may be read from a
+file, environment variables, or command line arguments; either template or data
+file may be read from stdin; output file may be written to stdout;
 
 supported data formats: ini, json, xml, yaml;
 
@@ -30,9 +30,17 @@ to read data from stdin:
 
     # jinja -d - {template} < {data}
 
-to use environment variables as data:
+to read data from command line arguments:
 
-    # jinja --defines-from-env='^AWS_' < {template}
+    # jinja -D {key} {value} [ -D {key} {value} ... ] {template}
+
+to read data from environment variables:
+
+    # jinja -E {key} [ -E {key} ... ] {template}
+
+to read data from environment variables using regex:
+
+    # jinja -X {regex} {template}
 
 to output to a file:
 
@@ -62,9 +70,19 @@ output:
 
     sheep eat grass;
 
+## data priority
+
+data priority from low to high:
+
+-   environment variables: `-E, --env`, `-X, --env-regex`;
+
+-   data file: `-d, --data`;
+
+-   command line arguments: `-D, --define`;
+
 ## license
 
-Copyright (C) 2018 Cyker Way
+Copyright (C) 2018-2021 Cyker Way
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
