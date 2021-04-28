@@ -126,7 +126,7 @@ def _load_file_data(fname, fmt):
             fin = open(fname, 'rt')
 
         try:
-            ##  detect data format;
+            ##  detect data file format;
             if fmt is None:
                 if fname.endswith('.ini'):
                     fmt = 'ini'
@@ -137,7 +137,7 @@ def _load_file_data(fname, fmt):
                 elif fname.endswith('.yaml'):
                     fmt = 'yaml'
                 else:
-                    raise Exception('no data format;')
+                    raise Exception('no data file format;')
 
             ##  load data;
             if fmt == 'ini':
@@ -149,7 +149,7 @@ def _load_file_data(fname, fmt):
             elif fmt == 'yaml':
                 data = _load_file_data_yaml(fin)
             else:
-                raise Exception('invalid data format: {};'.format(fmt))
+                raise Exception('invalid data file format: {};'.format(fmt))
 
         finally:
             fin.close()
@@ -271,7 +271,7 @@ def _parse_args():
         '-f', '--format',
         type=str,
         metavar='format',
-        help='data format;',
+        help='data file format;',
     )
 
     ##  add arg;
