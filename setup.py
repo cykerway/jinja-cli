@@ -49,7 +49,7 @@ setup(
     ##
     ##  <https://packaging.python.org/en/latest/single_source_version.html>
     ##
-    version='1.1.4',
+    version='1.2.0',
 
     ##  project homepage;
     ##
@@ -142,7 +142,7 @@ setup(
     ##
     ##  these keywords will appear on the project page;
     ##
-    keywords='jinja template engine',
+    keywords='jinja template engine interface',
 
     ##  package data;
     ##
