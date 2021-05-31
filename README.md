@@ -80,6 +80,20 @@ data priority from low to high:
 
 -   command line arguments: `-D, --define`;
 
+## undefined variables
+
+option `-u, --undefined` sets how [undefined variables][undefined] are handled:
+
+-   `''`: an undefined variable can be printed and iterated over; this is the
+    default;
+
+-   `'chainable'`: an undefined variable is chainable;
+
+-   `'debug'`: an undefined variable returns debug info when printed;
+
+-   `'strict'`: an undefined variable barks on print, iteration, boolean tests
+    and comparisons;
+
 ## license
 
 Copyright (C) 2018-2021 Cyker Way
@@ -98,4 +112,5 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 [jinja]: http://jinja.pocoo.org/
+[undefined]: https://jinja.palletsprojects.com/en/latest/api/#undefined-types
 
