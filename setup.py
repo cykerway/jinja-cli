@@ -49,7 +49,7 @@ setup(
     ##
     ##  <https://packaging.python.org/en/latest/single_source_version.html>
     ##
-    version='1.2.0',
+    version='1.2.1',
 
     ##  project homepage;
     ##
@@ -180,7 +180,7 @@ setup(
     ##  will be installed by pip when this project is installed;
     ##
     install_requires=[
-        'Jinja2',
+        'Jinja2>=2.11.0',
         'PyYAML',
         'argparse-ext',
         'xmltodict',
