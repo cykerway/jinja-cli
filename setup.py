@@ -17,7 +17,7 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name='jinja-cli',
-    version='1.2.1',
+    version='1.2.2',
     url='https://github.com/cykerway/jinja-cli',
     author='Cyker Way',
     author_email='cykerway@example.com',
