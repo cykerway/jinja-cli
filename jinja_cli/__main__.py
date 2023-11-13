@@ -82,15 +82,15 @@ def _load_file_data_yaml(fin):
 
     return yaml.safe_load(fin)
 
-def _load_env_data(envs, env_regex):
+def _load_env_data(envs, env_regexes):
 
     '''
     load data from env;
 
     $1:envs:list
     :   names of envars that define data;
-    $2:env_regex:str
-    :   regex matching envars that define data;
+    $2:env_regexes:list
+    :   regexes matching envars that define data;
     $?::dict
     :   data;
     '''
@@ -98,7 +98,7 @@ def _load_env_data(envs, env_regex):
     data = {}
 
     for k in os.environ:
-        if ( envs and k in envs) or ( env_regex and re.match(env_regex, k) ):
+        if ( envs and k in envs) or ( env_regexes and any(re.match(env_regex, k) for env_regex in env_regexes) ):
             data[k] = os.environ[k]
 
     return data
@@ -156,7 +156,7 @@ def _load_file_data(fname, fmt):
 
     return data
 
-def _load_data(fname, fmt, defines, envs, env_regex):
+def _load_data(fname, fmt, defines, envs, env_regexes):
 
     '''
     load data; precedence (low to high): envars, files, args;
@@ -169,8 +169,8 @@ def _load_data(fname, fmt, defines, envs, env_regex):
     :   data defined as command line arguments;
     $4:envs:list
     :   names of envars that define data;
-    $5:env_regex:str
-    :   regex matching envars that define data;
+    $5:env_regexes:list
+    :   regexes matching envars that define data;
     $?::dict
     :   data;
     '''
@@ -178,7 +178,7 @@ def _load_data(fname, fmt, defines, envs, env_regex):
     data = {}
 
     ##  merge data defined as envars;
-    data.update(_load_env_data(envs, env_regex))
+    data.update(_load_env_data(envs, env_regexes))
 
     ##  merge data defined in file;
     data.update(_load_file_data(fname, fmt))
@@ -253,6 +253,7 @@ def _parse_args():
     ##  add arg;
     parser.add_argument(
         '-X', '--env-regex',
+        action='append',
         type=str,
         metavar='regex',
         help='define data with envars matching regex;',
